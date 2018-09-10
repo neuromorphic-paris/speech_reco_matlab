@@ -47,8 +47,8 @@ if integrity_check
     % hold off;
     % pause
 
-    warning(['There are ', num2str(sum(sign(int64(spikes.ts(2:end))-int64(spikes.ts(1:end-1))) < 0)), ...
-      ' events back in time. Fixing...'])
+    warning(['There are ', num2str(sum(sign(int64(spikes.ts(2:end)) - ...
+        int64(spikes.ts(1:end-1))) < 0)), ' events back in time. Fixing...']);
     [spikes.ts, idxsort] = sort(spikes.ts);
     spikes.channel = spikes.channel(idxsort);
   end
@@ -58,7 +58,7 @@ spikes.ts = spikes.ts/5; % NOTE: to correct hardware behavior
 events_channel_on = (mod(spikes.channel, 2) == 0);
 spikes.is_increase = false(size(spikes.ts));
 spikes.is_increase(events_channel_on) = true;
-spikes.channel = spikes.channel / 2;
+spikes.channel = (spikes.channel / 2) - 1; % putting it between 0 and max_channel -1
 
 if display_plot
   plot(spikes.ts(~spikes.is_increase), spikes.channel(~spikes.is_increase), '.r')
