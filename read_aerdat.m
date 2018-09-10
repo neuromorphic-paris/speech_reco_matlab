@@ -1,8 +1,26 @@
 function spikes = read_aerdat(fn, integrity_check, display_plot)
-% Reads aerdat with cochlear data format
+% READ AERDAT Reads files with cochlear data format
+%   [SPIKES] = READ_AERDAT(FILENAME) loads the file which location is
+%   according to the FILENAME string.
+%   By default, READ_AERDAT return a structure containing information about the
+%   spike stream :
+%       - Timestamps of each spikes in an uint32, fieldname ts
+%       - Filter channel in an uint16, from 0 to 32, fieldname channel
+%       - Polarity in an logical, fieldname is_increase.
+%
+%   [SPIKES] = READ_AERDAT(FILENAME, INTEGRITY_CHECK) checks the integrity (if
+%   set to true) of the file, by checking if the timestamps are in ascending %
+%   order and the channel is bewteen 0 and 32.
+%
+%   [SPIKES] = READ_AERDAT(FILENAME, INTEGRITY_CHECK, DISPLAY_PLOT) plots
+%   (if true) the stream.
 
 if ~exist('integrity_check', 'var')
   integrity_check = true;
+end
+
+if ~exist('display_plot', 'var')
+  display_plot = false;
 end
 
 f = fopen(fn);
@@ -50,6 +68,7 @@ if display_plot
   xlabel('time in us')
   title(fn, 'interpreter', 'none')
   hold off;
+  legend({'OFF', 'ON'})
   grid minor
   drawnow;
 end
