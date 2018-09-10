@@ -1,0 +1,55 @@
+function spikes = read_aerdat(fn, integrity_check, display_plot)
+% Reads aerdat with cochlear data format
+
+if ~exist('integrity_check', 'var')
+  integrity_check = true;
+end
+
+f = fopen(fn);
+% fseek(f, 0, 'eof');
+% n_ev = ftell(f)/6;
+% fseek(f, 0, 'bof');
+spikes.channel=fread(f,Inf,'*uint16',4,'b'); % can be Inf instead of n_ev
+fseek(f,2,'bof');
+spikes.ts=fread(f,Inf,'*uint32',2,'b');
+fclose(f);
+
+if integrity_check
+  cond1 = max(spikes.channel) <= 63;
+  cond2 = sum(sign(int64(spikes.ts(2:end))-int64(spikes.ts(1:end-1))) < 0) == 0;
+  if ~cond1
+    error(['Max channel is ', num2str(max(spikes.channel)), ' on the file ', fn, '.']);
+  end
+  if ~cond2
+    % bad_events = sign(int64(spikes.ts(2:end))-int64(spikes.ts(1:end-1))) < 0;
+    %
+    % plot(spikes.ts(bad_events), 1, '.r')
+    % hold on;
+    % plot(spikes.ts(~bad_events), 1, '.g')
+    % hold off;
+    % pause
+
+    warning(['There are ', num2str(sum(sign(int64(spikes.ts(2:end))-int64(spikes.ts(1:end-1))) < 0)), ...
+      ' events back in time. Fixing...'])
+    [spikes.ts, idxsort] = sort(spikes.ts);
+    spikes.channel = spikes.channel(idxsort);
+  end
+end
+
+spikes.ts = spikes.ts/5; % NOTE: to correct hardware behavior
+events_channel_on = (mod(spikes.channel, 2) == 0);
+spikes.is_increase = false(size(spikes.ts));
+spikes.is_increase(events_channel_on) = true;
+spikes.channel = spikes.channel / 2;
+
+if display_plot
+  plot(spikes.ts(~spikes.is_increase), spikes.channel(~spikes.is_increase), '.r')
+  hold on;
+  plot(spikes.ts(spikes.is_increase), spikes.channel(spikes.is_increase), '.g')
+  ylabel('channel')
+  xlabel('time in us')
+  title(fn, 'interpreter', 'none')
+  hold off;
+  grid minor
+  drawnow;
+end
