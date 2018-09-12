@@ -10,7 +10,7 @@ n_channels = centers.n_channels;
 tau = centers.tau;
 fieldname_polarity = centers.fieldname_polarity;
 n_polarities = centers.n_polarities;
-n_el_context = n_channels)*n_polarities;
+n_el_context = n_channels*n_polarities;
 
 wb = waitbar(0, ['Crushing ', inputname(1), '...']);
 wb.Children.Title.Interpreter = 'none';

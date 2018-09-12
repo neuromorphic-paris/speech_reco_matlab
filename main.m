@@ -27,7 +27,7 @@ rng(0);
 
 %% Splitting train into feature train and classifier train
 % NOTE: maybe should split according to the class (e.g. all class represented)
-numel_files_to_train_features = 5;
+numel_files_to_train_features = 10;
 feature_train_files = randperm(numel(spikes_train), numel_files_to_train_features);
 class_feature_train = class_train(feature_train_files)
 spikes_feature_train = spikes_train(feature_train_files);
@@ -39,7 +39,7 @@ spikes_train(feature_train_files) = [];
 n_channels = 32;
 
 specs_layer1.radius = 5;
-specs_layer1.tau = 1000; % tau is an exponential decay, in microseconds
+specs_layer1.tau = 2000; % tau is an exponential decay, in microseconds
 specs_layer1.n_channels = n_channels;
 specs_layer1.fieldname_polarity = 'is_increase';
 specs_layer1.n_polarities = 2; %is_increase is a logical
@@ -50,7 +50,7 @@ all_train_context = aggregate_contexts_window(spikes_feature_train, specs_layer1
 %% Rejecting empty contexts
 thresh_too_far_event = 3*specs_layer1.tau; % in microseconds
 ratio_empty_ctx = 0.3; % below this ratio the context will be discarded
-nb_clusters = 100;
+nb_clusters = 150;
 
 ctx_to_discard = (sum(all_train_context > ...
   exp(-thresh_too_far_event/specs_layer1.tau), 2) / size(all_train_context,2)) ...
@@ -71,8 +71,8 @@ fprintf('Done in %.2f seconds.\n', t_clustering)
 % representing the index of the center which is close to the context
 tstart_affectation = tic;
 metric_dist_assignement = 'cosine';
-spikes_train = assign_closest_center(spikes_train, centers, metric_dist_assignement);
-spikes_test = assign_closest_center(spikes_test, centers, metric_dist_assignement);
+spikes_train = assign_closest_center_window(spikes_train, centers, metric_dist_assignement);
+spikes_test = assign_closest_center_window(spikes_test, centers, metric_dist_assignement);
 t_affectation = toc(tstart_affectation)
 
 
