@@ -1,4 +1,4 @@
-function spikes_cell_array = assign_closest_center(spikes_cell_array, centers, metric_pdist)
+function spikes_cell_array2 = assign_closest_center(spikes_cell_array, centers, metric_pdist)
 
 if ~exist(metric_pdist, 'var')
   metric_pdist = 'cosine';
@@ -12,9 +12,11 @@ fieldname_polarity = centers.fieldname_polarity;
 n_polarities = centers.n_polarities;
 n_el_context = (2*radius+1)*n_polarities;
 
-wb = waitbar(0, ['Crushing ', inputname(1), '...']);
-wb.Children.Title.Interpreter = 'none';
-for ind = 1:numel(spikes_cell_array)
+spikes_cell_array2 = spikes_cell_array;
+
+% NOTE : adding a striaghtforward bulletproof parfor progress bar?
+
+parfor ind = 1:numel(spikes_cell_array)
   events_buffer = zeros(n_polarities, n_channels + 2 * radius);
   spikes = spikes_cell_array{ind};
   ctx_spikes = zeros(numel(spikes.ts), n_el_context);
@@ -30,8 +32,6 @@ for ind = 1:numel(spikes_cell_array)
     end
     events_buffer(pol, c) = t_ev;
   end
-  [~, spikes_cell_array{ind}.closest_center] = min(pdist2(ctx_spikes, clusters, ...
+  [spikes_cell_array2{ind}.dist_closest_center, spikes_cell_array2{ind}.closest_center] = min(pdist2(ctx_spikes, clusters, ...
     metric_pdist), [], 2);
-  waitbar(ind/numel(spikes_cell_array),wb)
 end
-delete(wb)

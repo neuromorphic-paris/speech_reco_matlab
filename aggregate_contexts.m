@@ -15,10 +15,11 @@ if (n_el_context*n_spikes*8 > 8*1024^3)
   error(['Context of all spikes need ', num2str(n_el_context*n_spikes*8/(1024^3), '%.1f'), ...
     ' Go of RAM. Aborting.'])
 end
+contexts = cell(1,numel(spikes_cell_array)); %NOTE: this can be huge, but it's nice to preallocate
+for ind = 1:numel(spikes_cell_array)
+  contexts{ind} = zeros(numel(spikes_cell_array{ind}.ts), n_el_context);
+end
 
-contexts = zeros(n_spikes, n_el_context); %NOTE: this can be huge, but it's nice to preallocate
-
-cpt_ctx = 0;
 for ind = 1:numel(spikes_cell_array)
   events_buffer = zeros(n_polarities, n_channels+2*radius); % NOTE: adding offset to extract the context easily
   % h = imagesc(events_buffer);
@@ -27,9 +28,8 @@ for ind = 1:numel(spikes_cell_array)
     c = spikes.channel(ind_ev) + radius + 1;
     t_ev = double(spikes.ts(ind_ev));
     pol = uint32(spikes.(fieldname_polarity)(ind_ev)) + 1;
-    cpt_ctx = cpt_ctx + 1;
     for ind_p = 1:n_polarities
-      contexts(cpt_ctx,(1:(2*radius+1))+(2*radius+1)*(ind_p-1)) = ...
+      contexts{ind}(ind_ev,(1:(2*radius+1))+(2*radius+1)*(ind_p-1)) = ...
         exp(-(t_ev - events_buffer(ind_p, c-radius:c+radius)) / tau);
     end
     events_buffer(pol, c) = t_ev;
@@ -37,3 +37,5 @@ for ind = 1:numel(spikes_cell_array)
     % drawnow;
   end
 end
+
+contexts = vertcat(contexts{:});
