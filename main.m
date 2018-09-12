@@ -44,7 +44,7 @@ specs_layer1.n_channels = n_channels;
 specs_layer1.fieldname_polarity = 'is_increase';
 specs_layer1.n_polarities = 2; %is_increase is a logical
 
-all_train_context = aggregate_contexts(spikes_feature_train, specs_layer1);
+all_train_context = aggregate_contexts_window(spikes_feature_train, specs_layer1);
 
 
 %% Rejecting empty contexts
