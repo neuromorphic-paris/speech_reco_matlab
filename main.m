@@ -4,24 +4,7 @@ close all;
 if ~exist('spikes_feature_train', 'var')
 % Loading filenames
   [filenames_train, class_train, filenames_test, class_test] = ...
-    get_filenames_on_off_database();
-
-  n_files_each_class = 10;
-
-  if n_files_each_class > 0
-    rng(0);
-    for ind = 1:numel(unique(class_train))
-      files_curr_class = find(class_train == ind);
-      perm = randperm(numel(files_curr_class), numel(files_curr_class)-n_files_each_class);
-      class_train(files_curr_class(perm)) = [];
-      filenames_train(files_curr_class(perm)) = [];
-
-      files_curr_class = find(class_test == ind);
-      perm = randperm(numel(files_curr_class), numel(files_curr_class)-n_files_each_class);
-      class_test(files_curr_class(perm)) = [];
-      filenames_test(files_curr_class(perm)) = [];
-    end
-  end
+    get_filenames_on_off_database(30);
 
 
   % Reading files
