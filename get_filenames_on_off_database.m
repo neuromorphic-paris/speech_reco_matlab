@@ -52,6 +52,11 @@ for ind = 1:numel(used_classes)
     end
   end
 end
+
+if isempty(class_train) || isempty(class_test)
+  error('Not enough files. Is the dataset really here?')
+end
+
 % At this point, we have two variables, filenames_train and filenames_test
 % which contains all full filenames of train and test files of the two classes.
 fprintf(['%d files missing according to the suggested', ...
