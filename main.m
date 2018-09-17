@@ -1,6 +1,9 @@
 clearvars -except spikes_feature_train spikes_train spikes_test class_train class_test;
 close all;
 
+%% Let's be deterministic
+rng(0);
+
 if ~exist('spikes_feature_train', 'var')
 % Loading filenames
   [filenames_train, class_train, filenames_test, class_test] = ...
@@ -31,8 +34,6 @@ if ~exist('spikes_feature_train', 'var')
   spikes_train(feature_train_files) = [];
 end
 
-%% Let's be deterministic
-rng(0);
 
 %% Training feature extractor
 n_channels = 32;
