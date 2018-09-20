@@ -81,8 +81,8 @@ fprintf('Done in %.2f seconds.\n', t_clustering)
 tstart_affectation = tic;
 fprintf('Assigning spikes, this can take a long time...\n')
 metric_dist_assignement = 'cosine';
-spikes_train = assign_closest_center(spikes_train, centers, metric_dist_assignement);
-spikes_test = assign_closest_center(spikes_test, centers, metric_dist_assignement);
+spikes_train = assign_closest_center_window(spikes_train, centers, metric_dist_assignement);
+spikes_test = assign_closest_center_window(spikes_test, centers, metric_dist_assignement);
 t_affectation = toc(tstart_affectation)
 fprintf('Done in %.2f seconds.\n', t_affectation)
 
