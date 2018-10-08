@@ -30,8 +30,8 @@ for ind = 1:numel(spikes_cell_array)
     end
     events_buffer(pol, c) = t_ev;
   end
-  [~, spikes_cell_array{ind}.closest_center] = min(pdist2(ctx_spikes, clusters, ...
-    metric_pdist), [], 2);
+  [spikes_cell_array{ind}.dist_closest_center, spikes_cell_array{ind}.closest_center] = min(pdist2(ctx_spikes, ...
+    clusters, metric_pdist), [], 2);
   waitbar(ind/numel(spikes_cell_array),wb)
 end
 delete(wb)

@@ -266,6 +266,7 @@ truth = class_test;
 pred3 = class_train(argmin3);
 % plotconfusion(ind2vec(truth), ind2vec(pred))
 rate3 = sum(pred3 == truth)/numel(truth)
+
 figure;
 subplot(121)
 imagesc(sigs_train3)
