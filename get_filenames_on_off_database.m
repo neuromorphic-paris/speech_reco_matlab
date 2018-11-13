@@ -11,8 +11,10 @@ testing_files = table2array(readtable(...
 
 %% Getting on and off classes
 used_classes = {'on', 'off'};
-folders = {fullfile(pwd, 'on-off', 'on_aedats'), ...
-  fullfile(pwd, 'on-off', 'off_aedats')};
+% first_folder = 'on-off_minus27db_attenuation';
+first_folder = 'on-off';
+folders = {fullfile(pwd, first_folder, 'on_aedats'), ...
+  fullfile(pwd, first_folder, 'off_aedats')};
 
 filenames_train = {};
 filenames_test = {};
@@ -37,7 +39,7 @@ for ind = 1:numel(used_classes)
 
   for ind_files = 1:size(curr_files_training,1)
     curr_filename = fullfile(folders{ind}, ...
-      [curr_files_training{ind_files,2}, '.aedat']);
+      [curr_files_training{ind_files,2}, '.aedat'])
     fid = fopen(curr_filename);
     if fid ~= -1
       filenames_train = [filenames_train;  {curr_filename}];
@@ -72,6 +74,12 @@ for ind = 1:numel(used_classes)
     end
   end
 end
+% training_files
+% testing_files
+% filenames_train
+% filenames_test
+% class_train
+% class_test
 
 if isempty(class_train) || isempty(class_test)
   error('Not enough files. Is the dataset really here?')
