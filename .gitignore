@@ -1,3 +1,10 @@
 *.aedat
 
 functions/
+on-off/
+on-off_100vol/
+on-off_minus27db_attenuation/
+RBSSG/
+Generacion Spikes Matlab*
+*.pdf
+*.zip

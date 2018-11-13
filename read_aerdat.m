@@ -54,7 +54,7 @@ if integrity_check
   end
 end
 
-spikes.ts = spikes.ts/5; % NOTE: to correct hardware behavior
+% spikes.ts = spikes.ts/5; % NOTE: to correct hardware behavior
 events_channel_on = (mod(spikes.channel, 2) == 0);
 spikes.is_increase = false(size(spikes.ts));
 spikes.is_increase(events_channel_on) = true;
@@ -72,3 +72,10 @@ if display_plot
   grid minor
   drawnow;
 end
+%
+% offset_start = 6000;
+% idxs = find(spikes.ts < offset_start);
+% spikes.ts(idxs) = [];
+% spikes.ts = spikes.ts - offset_start;
+% spikes.is_increase(idxs) = [];
+% spikes.channel(idxs) = [];
